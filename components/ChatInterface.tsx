@@ -78,7 +78,7 @@ export default function ChatInterface() {
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error sending message:', error);
-        setMessages((prev) => [...prev, { role: 'error', content: `Error: ${error.message}` }]);
+        setMessages((prev) => [...prev, { role: 'error', content: `${error.message}` }]);
         toast({
           title: "Error",
           description: "Failed to send message. Please try again.",
