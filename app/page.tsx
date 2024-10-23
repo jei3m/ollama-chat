@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { Sun, Moon } from 'lucide-react';
+import { ReactNode } from 'react';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -67,7 +68,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                       : 'text-gray-800'
                 } max-w-none`}
                 components={{
-                  code({ node, className, children, ...props }: any) {
+                  code: ({ className, children }: { className?: string; children?: ReactNode }) => {
+                    if (!children) return null; // Return null if children is undefined
+                
                     const match = /language-(\w+)/.exec(className || '');
                     return match ? (
                       <SyntaxHighlighter
@@ -78,11 +81,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                         {String(children).replace(/\n$/, '')}
                       </SyntaxHighlighter>
                     ) : (
-                      <code className={className} {...props}>
-                        {children}
-                      </code>
+                      <code className={className}>{children}</code>
                     );
-                  }
+                  },
                 }}
               >
                 {message.content}
@@ -161,7 +162,7 @@ export default function Home() {
         setSelectedModel(modelNames[0]);
       }
       setError('');
-    } catch (err) {
+    } catch {
       setError('Failed to fetch Ollama models. Please ensure Ollama is running.');
     } finally {
       setLoading(false);
@@ -170,10 +171,10 @@ export default function Home() {
 
   const handleSendMessage = async (message: string) => {
     if (!selectedModel || !message.trim()) return;
-
+  
     const newMessage: Message = { role: 'user', content: message };
     setMessages(prev => [...prev, newMessage]);
-
+  
     try {
       const response = await fetch('http://localhost:11434/api/generate', {
         method: 'POST',
@@ -186,15 +187,15 @@ export default function Home() {
           stream: false,
         }),
       });
-
+  
       const data = await response.json();
       const assistantMessage: Message = {
         role: 'assistant',
         content: data.response,
       };
-
+  
       setMessages(prev => [...prev, assistantMessage]);
-    } catch (err) {
+    } catch {
       setError('Failed to get response from Ollama');
     }
   };
