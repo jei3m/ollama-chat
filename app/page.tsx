@@ -1,4 +1,5 @@
-"use client"
+'use client';
+
 import { useState, useEffect } from 'react';
 import { Sun, Moon } from 'lucide-react';
 import ChatInterface from '@/components/ChatInterface';
@@ -6,6 +7,7 @@ import ChatInterface from '@/components/ChatInterface';
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+  isStreaming?: boolean;
 }
 
 export default function Home() {
@@ -49,8 +51,14 @@ export default function Home() {
   const handleSendMessage = async (message: string) => {
     if (!selectedModel || !message.trim()) return;
   
-    const newMessage: Message = { role: 'user', content: message };
-    setMessages(prev => [...prev, newMessage]);
+    const userMessage: Message = { role: 'user', content: message };
+    const assistantMessage: Message = { 
+      role: 'assistant', 
+      content: '', 
+      isStreaming: true 
+    };
+    
+    setMessages(prev => [...prev, userMessage, assistantMessage]);
   
     try {
       const response = await fetch('http://localhost:11434/api/generate', {
@@ -61,19 +69,58 @@ export default function Home() {
         body: JSON.stringify({
           model: selectedModel,
           prompt: message,
-          stream: false,
+          stream: true,
         }),
       });
-  
-      const data = await response.json();
-      const assistantMessage: Message = {
-        role: 'assistant',
-        content: data.response,
-      };
-  
-      setMessages(prev => [...prev, assistantMessage]);
-    } catch {
+
+      if (!response.body) throw new Error('No response body');
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let fullResponse = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n');
+
+        for (const line of lines) {
+          if (line.trim() === '') continue;
+          
+          try {
+            const data = JSON.parse(line);
+            fullResponse += data.response;
+            
+            setMessages(prev => {
+              const newMessages = [...prev];
+              const lastMessage = newMessages[newMessages.length - 1];
+              if (lastMessage && lastMessage.role === 'assistant') {
+                lastMessage.content = fullResponse;
+              }
+              return newMessages;
+            });
+          } catch (e) {
+            console.error('Error parsing JSON:', e);
+          }
+        }
+      }
+
+      // Mark streaming as complete
+      setMessages(prev => {
+        const newMessages = [...prev];
+        const lastMessage = newMessages[newMessages.length - 1];
+        if (lastMessage && lastMessage.role === 'assistant') {
+          lastMessage.isStreaming = false;
+        }
+        return newMessages;
+      });
+
+    } catch (err) {
       setError('Failed to get response from Ollama');
+      // Remove the assistant message if there was an error
+      setMessages(prev => prev.slice(0, -1));
     }
   };
 
