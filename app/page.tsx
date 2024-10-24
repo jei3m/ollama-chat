@@ -1,8 +1,8 @@
 'use client';
-
 import { useState, useEffect } from 'react';
 import { Sun, Moon } from 'lucide-react';
 import ChatInterface from '@/components/ChatInterface';
+import Loader from '@/components/Loader'
 
 interface Message {
   role: 'user' | 'assistant';
@@ -126,8 +126,8 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className={`container mx-auto p-4 ${isDarkMode ? 'bg-gray-900 text-gray-100' : ''}`}>
-        <div className="text-center">Loading models...</div>
+      <div>
+        <Loader isDarkMode={isDarkMode} />
       </div>
     );
   }
