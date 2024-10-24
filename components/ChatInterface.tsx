@@ -97,7 +97,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         onSubmit={handleSubmit} 
         className={`fixed bottom-0 left-0 right-0 ${
           isDarkMode ? 'bg-gray-900' : 'bg-white border-t'
-        } p-4 shadow-lg`}
+        } p-3 shadow-lg`}
       >
         <div className="container mx-auto max-w-4xl">
           <div className="flex gap-2">
