@@ -1,10 +1,6 @@
 "use client"
 import { useState, useEffect } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { Sun, Moon } from 'lucide-react';
-import { ReactNode } from 'react';
 import ChatInterface from '@/components/ChatInterface';
 
 interface Message {
