@@ -3,9 +3,9 @@
 
 ## Features
 
-- **Next JS**: Utilizes a front-end library Next JS for building user interfaces.
+- **Next JS**: Utilizes Next JS a framework for building the user interface.
 - **Ollama**: Compatible with installed Ollama models.
-- **Markdown Render**: For enhanced readability of AI messages.
+- **Markdown Render**: For enhanced readability of AI messages, and to easily copy generated code.
 
 ## Purpose
 
