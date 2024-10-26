@@ -1,10 +1,10 @@
-// ChatInterface.tsx
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -87,14 +87,25 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 components={{
                   code({ node, className, children, ...props }: any) {
                     const match = /language-(\w+)/.exec(className || '');
+                    const codeString = String(children).replace(/\n$/, '');
                     return match ? (
-                      <SyntaxHighlighter
-                        style={atomDark}
-                        language={match[1]}
-                        PreTag="div"
-                      >
-                        {String(children).replace(/\n$/, '')}
-                      </SyntaxHighlighter>
+                      <div className="relative">
+                        <SyntaxHighlighter
+                          style={atomDark}
+                          language={match[1]}
+                          PreTag="div"
+                        >
+                          {codeString}
+                        </SyntaxHighlighter>
+                        <CopyToClipboard text={codeString}>
+                          <button
+                            className="absolute top-2 right-2 bg-gray-600 text-white px-2 py-1 rounded opacity-70 hover:opacity-100"
+                            onClick={() => alert('Code copied to clipboard!')}
+                          >
+                            Copy 
+                          </button>
+                        </CopyToClipboard>
+                      </div>
                     ) : (
                       <code className={className} {...props}>
                         {children}
