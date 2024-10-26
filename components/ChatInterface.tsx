@@ -1,10 +1,10 @@
+// ChatInterface.tsx
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import { ReactNode } from 'react';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -18,6 +18,14 @@ interface ChatInterfaceProps {
   isDarkMode: boolean;
 }
 
+const TypingIndicator = ({ isDarkMode }: { isDarkMode: boolean }) => (
+  <div className="flex space-x-2 p-3 max-w-[80%]">
+    <div className={`w-2 h-2 rounded-full ${isDarkMode ? 'bg-gray-400' : 'bg-gray-600'} animate-bounce`} style={{ animationDelay: '0ms' }} />
+    <div className={`w-2 h-2 rounded-full ${isDarkMode ? 'bg-gray-400' : 'bg-gray-600'} animate-bounce`} style={{ animationDelay: '150ms' }} />
+    <div className={`w-2 h-2 rounded-full ${isDarkMode ? 'bg-gray-400' : 'bg-gray-600'} animate-bounce`} style={{ animationDelay: '300ms' }} />
+  </div>
+);
+
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ 
   messages = [], 
   onSendMessage, 
@@ -26,6 +34,15 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 }) => {
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,9 +85,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                       : 'text-gray-800'
                 } max-w-none`}
                 components={{
-                  code: ({ className, children }: { className?: string; children?: ReactNode }) => {
-                    if (!children) return null; // Return null if children is undefined
-                
+                  code({ node, className, children, ...props }: any) {
                     const match = /language-(\w+)/.exec(className || '');
                     return match ? (
                       <SyntaxHighlighter
@@ -81,9 +96,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                         {String(children).replace(/\n$/, '')}
                       </SyntaxHighlighter>
                     ) : (
-                      <code className={className}>{children}</code>
+                      <code className={className} {...props}>
+                        {children}
+                      </code>
                     );
-                  },
+                  }
                 }}
               >
                 {message.content}
@@ -91,13 +108,19 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             </div>
           </div>
         ))}
+        {isLoading && (
+          <div className="flex justify-start">
+            <TypingIndicator isDarkMode={isDarkMode} />
+          </div>
+        )}
+        <div ref={messagesEndRef} />
       </div>
 
       <form 
         onSubmit={handleSubmit} 
         className={`fixed bottom-0 left-0 right-0 ${
-          isDarkMode ? 'bg-gray-900' : 'bg-white border-t'
-        } p-3 shadow-lg`}
+          isDarkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-t'
+        } p-4 shadow-lg`}
       >
         <div className="container mx-auto max-w-4xl">
           <div className="flex gap-2">
@@ -120,9 +143,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             <button
               type="submit"
               disabled={!isModelSelected || isLoading || !newMessage.trim()}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center"
             >
-              {isLoading ? 'Sending...' : 'Send'}
+              {isLoading ? (
+                <>
+                  <div className='mr-1'>Sending</div>
+                  <div className="spinner"></div>
+                </>
+              ) : (
+                'Send'
+              )}
             </button>
           </div>
         </div>
