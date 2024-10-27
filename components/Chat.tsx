@@ -134,16 +134,16 @@ export default function Chat() {
   return (
     <div className={`flex flex-col min-h-screen ${isDarkMode ? 'bg-gray-800 text-gray-100' : 'bg-white'}`}>
         <div className={`w-full ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'} py-4 px-4 shadow-md flex justify-center items-center`}>
-        <h1 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'} mr-4`}>
-            Ollama Chat
-        </h1>
+          <h1 className={`text-4xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'} mr-4`}>
+              Ollama Chat
+          </h1>
         <button
             onClick={toggleDarkMode}
             className={`p-2 rounded-full ${
             isDarkMode ? 'bg-gray-800 text-yellow-400' : 'bg-gray-200 text-gray-800'
             }`}
         >
-            {isDarkMode ? <Sun size={26} /> : <Moon size={26} />}
+            {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
         </button>
         </div>
 

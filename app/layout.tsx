@@ -13,6 +13,18 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
+const encodeSans = localFont({
+  src: "./fonts/EncodeSans.woff",
+  variable: "--font-encode-sans",
+  weight: "100 900",
+});
+
+const encodeSansBold = localFont({
+  src: "./fonts/EncodeSansBold.woff",
+  variable: "--font-encode-sansbold",
+  weight: "100 900",
+});
+
 export const metadata: Metadata = {
   title: "Ollama Chat",
   description: "AI Chat UI for Ollama Models",
@@ -26,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${encodeSans.variable} ${encodeSansBold.variable} antialiased`}
       >
         {children}
       </body>
