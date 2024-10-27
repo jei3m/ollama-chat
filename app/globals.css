@@ -3,11 +3,19 @@
 @tailwind utilities;
 
 body {
-  font-family: var(--font-encode-sans);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 h1 {
   font-family: var(--font-geist-sans);
+}
+
+div{
+ font-family: var(--font-encode-sans), var(--font-encode-sansbold) ;
+}
+
+strong{
+  font-family: var(--font-encode-sansbold)
 }
 
 @layer utilities {
