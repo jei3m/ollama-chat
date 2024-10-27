@@ -20,9 +20,9 @@ interface ChatInterfaceProps {
 
 const TypingIndicator = ({ isDarkMode }: { isDarkMode: boolean }) => (
   <div className="flex space-x-2 p-3 max-w-[80%]">
-    <div className={`w-2 h-2 rounded-full ${isDarkMode ? 'bg-gray-400' : 'bg-gray-600'} animate-bounce`} style={{ animationDelay: '0ms' }} />
-    <div className={`w-2 h-2 rounded-full ${isDarkMode ? 'bg-gray-400' : 'bg-gray-600'} animate-bounce`} style={{ animationDelay: '150ms' }} />
-    <div className={`w-2 h-2 rounded-full ${isDarkMode ? 'bg-gray-400' : 'bg-gray-600'} animate-bounce`} style={{ animationDelay: '300ms' }} />
+    <div className={`w-1.5 h-1.5 rounded-full ${isDarkMode ? 'bg-gray-400' : 'bg-gray-600'} animate-bounce`} style={{ animationDelay: '0ms' }} />
+    <div className={`w-1.5 h-1.5 rounded-full ${isDarkMode ? 'bg-gray-400' : 'bg-gray-600'} animate-bounce`} style={{ animationDelay: '150ms' }} />
+    <div className={`w-1.5 h-1.5 rounded-full ${isDarkMode ? 'bg-gray-400' : 'bg-gray-600'} animate-bounce`} style={{ animationDelay: '300ms' }} />
   </div>
 );
 
