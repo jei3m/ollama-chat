@@ -90,17 +90,18 @@ strong{
 }
 
 .spinner {
-  border: 3px solid rgba(255, 255, 255, 0.3);
+  border: 3px solid rgba(49, 172, 255, 0.904);
   border-radius: 50%;
   border-top: 3px solid #ffffff;
   width: 16px;
   height: 16px;
   animation: spin 1s linear infinite;
   display: inline-block;
-  margin-right: 8px;
+  margin-right: -4px;
 }
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
