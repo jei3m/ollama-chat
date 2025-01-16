@@ -33,10 +33,3 @@ To get started with the Ollama Chat, follow these steps:
 
 4. Open Ollama:
    Make sure Ollama is open and that you have local models installed.
-```
-
-### Key Fixes:
-1. **Code Block Formatting**: Each code block should be properly closed with triple backticks (```). In your original Markdown, the code blocks were not closed correctly, which caused the rendering issues.
-2. **Consistent Indentation**: Ensure that the indentation within the list items is consistent for better readability.
-
-This corrected version should display properly on GitHub.
